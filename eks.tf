@@ -1,24 +1,3 @@
-variable "aws-region" {
-  type        = string  
-  description = "Região da AWS"
-  default     = "us-east-1"
-}
-
-terraform {
-  required_version = ">= 1.3, <= 1.7.4"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.65"
-    }
-  }
-}
-
-provider "aws" {
-  region = var.aws-region
-}
-
 resource "aws_default_vpc" "vpcTechChallenge" {
   tags = {
     Name = "Default VPC to Tech Challenge"
@@ -39,10 +18,6 @@ resource "aws_default_subnet" "subnetTechChallenge2" {
   tags = {
     Name = "Default subnet for us-east-1b to Tech Challenge"
   }
-}
-
-resource "aws_ecr_repository" "ecrTechChallenge" {
-  name = "eksRepository"
 }
 
 data "aws_iam_policy_document" "policyDocEKS" {
@@ -142,37 +117,11 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   node_role_arn   = aws_iam_role.roleNodeEKS.arn
   subnet_ids      = [aws_default_subnet.subnetTechChallenge.id, aws_default_subnet.subnetTechChallenge2.id]
 
-  instance_types = ["t3.medium"]  # Especifica o tipo de instância
+  instance_types = ["t3.micro"]  # Especifica o tipo de instância
   # ami_type       = "AL2_x86_64"   # Especifica o tipo de AMI
   disk_size      = 20              # Tamanho do disco em GB
   tags = {
     "Name" = "eks-node-app"
-  }
-
-  scaling_config {
-    desired_size = 2
-    max_size     = 3
-    min_size     = 1
-  }
-
-  depends_on = [
-    aws_iam_role_policy_attachment.policyRoleNodeEKS,
-    aws_iam_role_policy_attachment.cniPolicyRoleNodeEKS,
-    aws_iam_role_policy_attachment.ec2PolicyRoleNodeEKS,
-  ]
-}
-
-resource "aws_eks_node_group" "paymentNodeGroupTechChallenge" {
-  cluster_name    = aws_eks_cluster.clusterTechChallenge.name
-  node_group_name = "paymentNodeTechChallenge"
-  node_role_arn   = aws_iam_role.roleNodeEKS.arn
-  subnet_ids      = [aws_default_subnet.subnetTechChallenge.id, aws_default_subnet.subnetTechChallenge2.id]
-
-  instance_types = ["t3.medium"]  # Especifica o tipo de instância
-  # ami_type       = "AL2_x86_64"   # Especifica o tipo de AMI
-  disk_size      = 20              # Tamanho do disco em GB
-  tags = {
-    "Name" = "eks-node-payment"
   }
 
   scaling_config {
