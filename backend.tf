@@ -3,7 +3,7 @@ terraform {
 
   backend "s3" {
     bucket         = "techchallengestate-g27"
-    key            = "terraform-lambda/terraform.tfstate"
+    key            = "terraform-eks/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
   }
