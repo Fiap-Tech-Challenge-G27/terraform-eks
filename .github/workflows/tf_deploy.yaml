@@ -6,8 +6,6 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
   deploy:
     name: Deploy Terraform
     runs-on: ubuntu-latest
@@ -18,66 +16,66 @@ jobs:
       EKS_CLUSTER_NAME: techchallenge
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v3
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-        aws-region: us-east-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: us-east-1
 
-    - name: Create S3 bucket
-      run: aws s3api create-bucket --bucket techchallengestate-g27 --acl private
+      - name: Create S3 bucket
+        run: aws s3api create-bucket --bucket techchallengestate-g27 --acl private
 
-    - name: Terraform init
-      run: terraform init
+      - name: Terraform init
+        run: terraform init
 
-    - name: Terraform plan
-      run: terraform plan
+      - name: Terraform plan
+        run: terraform plan
 
-    - name: Terraform apply
-      run: terraform apply -auto-approve
+      - name: Terraform apply
+        run: terraform apply -auto-approve
 
-    - name: Update kube config
-      run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
-    - name: Adicionar Helm repo para o Secrets Store CSI Driver
-      run: |
-        helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts || true
-        helm repo update
+      - name: Adicionar Helm repo para o Secrets Store CSI Driver
+        run: |
+          helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts || true
+          helm repo update
 
-    - name: Verificar se o Secrets Store CSI Driver já está instalado
-      id: csi_driver_check
-      run: |
-        if helm list -n kube-system | grep -q 'csi-secrets-store'; then
-          echo "::set-output name=exists::true"
-        else
-          echo "::set-output name=exists::false"
-        fi
+      - name: Verificar se o Secrets Store CSI Driver já está instalado
+        id: csi_driver_check
+        run: |
+          if helm list -n kube-system | grep -q 'csi-secrets-store'; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
 
-    - name: Instalar o Secrets Store CSI Driver se não estiver instalado
-      if: steps.csi_driver_check.outputs.exists == 'false'
-      run: |
-        helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver
+      - name: Instalar o Secrets Store CSI Driver se não estiver instalado
+        if: steps.csi_driver_check.outputs.exists == 'false'
+        run: |
+          helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver
 
-    - name: Adicionar Helm repo para o AWS Secrets Manager
-      run: |
-        helm repo add aws-secrets-manager https://aws.github.io/secrets-store-csi-driver-provider-aws || true
-        helm repo update
+      - name: Adicionar Helm repo para o AWS Secrets Manager
+        run: |
+          helm repo add aws-secrets-manager https://aws.github.io/secrets-store-csi-driver-provider-aws || true
+          helm repo update
 
-    - name: Verificar se o AWS Secrets Manager provider já está instalado
-      id: aws_provider_check
-      run: |
-        if helm list -n kube-system | grep -q 'secrets-provider-aws'; then
-          echo "::set-output name=exists::true"
-        else
-          echo "::set-output name=exists::false"
-        fi
+      - name: Verificar se o AWS Secrets Manager provider já está instalado
+        id: aws_provider_check
+        run: |
+          if helm list -n kube-system | grep -q 'secrets-provider-aws'; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
 
       - name: Instalar o AWS Secrets Manager provider se não estiver instalado
         if: steps.aws_provider_check.outputs.exists == 'false'
