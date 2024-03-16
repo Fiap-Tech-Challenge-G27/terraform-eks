@@ -13,7 +13,7 @@ jobs:
 
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      EKS_CLUSTER_NAME: techchallenge2
+      EKS_CLUSTER_NAME: techchallenge
 
     steps:
       - name: Checkout repository
