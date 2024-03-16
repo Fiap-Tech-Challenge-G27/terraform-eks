@@ -98,7 +98,7 @@ resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
 }
 
 resource "aws_eks_cluster" "clusterTechChallenge" {
-  name     = "techchallenge"
+  name     = "techchallenge2"
   role_arn = aws_iam_role.roleEKS.arn
 
   vpc_config {
