@@ -25,4 +25,4 @@ jobs:
         run: |
             terraform init
             terraform plan -destroy
-            terraform destroy -auto-approve
+            terraform destroy -target=aws_eks_node_group.appNodeGroupTechChallenge -target=aws_eks_cluster.clusterTechChallenge -auto-approve
