@@ -41,8 +41,10 @@ jobs:
       - name: Terraform apply
         run: terraform apply -auto-approve
 
-      - name: Update kube config
-        run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+      - name: Update kube config and add metrics-server
+        run: | 
+          aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+          kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
       - name: Adicionar Helm repo para o Secrets Store CSI Driver
         run: |
