@@ -1,0 +1,20 @@
+name: Destroy Infrastructure
+
+on:
+  workflow_dispatch: # Dispara o workflow apenas manualmente
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Destroy
+      run: |
+        terraform init
+        terraform destroy -auto-approve
