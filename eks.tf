@@ -125,8 +125,8 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   }
 
   scaling_config {
-    desired_size = 4
-    max_size     = 5
+    desired_size = 8
+    max_size     = 10
     min_size     = 2
   }
 
@@ -137,7 +137,7 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   ]
 }
 
-data "tls_certificate" "example" {
+data "tls_certificate" "thumbprint_eks" {
   url = aws_eks_cluster.clusterTechChallenge.identity.0.oidc.0.issuer
 }
 
