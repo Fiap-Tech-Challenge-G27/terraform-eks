@@ -136,3 +136,13 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
     aws_iam_role_policy_attachment.ec2PolicyRoleNodeEKS,
   ]
 }
+
+data "tls_certificate" "example" {
+  url = aws_eks_cluster.clusterTechChallenge.identity.0.oidc.0.issuer
+}
+
+resource "aws_iam_openid_connect_provider" "oidc_eks" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.example.certificates.0.sha1_fingerprint]
+  url             = aws_eks_cluster.clusterTechChallenge.identity.0.oidc.0.issuer
+}
