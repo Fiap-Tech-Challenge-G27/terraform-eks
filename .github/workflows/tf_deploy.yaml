@@ -118,11 +118,11 @@ jobs:
       
       - name: Verificar se já existe a Role AmazonEKSLoadBalancerControllerRole e cria se não existir
         run: |
-          role_exists=$(aws iam get-role --role-name "AmazonEKSLoadBalancerControllerRole" 2>&1)
+          # role_exists=$(aws iam get-role --role-name "AmazonEKSLoadBalancerControllerRole" 2>&1)
           
-          if [[ $role_exists == *"NoSuchEntity"* ]]; then
-            echo "::set-output name=exists::true"
-          else
+          # if [[ $role_exists == *"NoSuchEntity"* ]]; then
+          #   echo "::set-output name=exists::true"
+          # else
             eksctl create iamserviceaccount \
             --cluster=$EKS_CLUSTER_NAME \
             --namespace=kube-system \
@@ -130,8 +130,8 @@ jobs:
             --role-name AmazonEKSLoadBalancerControllerRole \
             --attach-policy-arn=arn:aws:iam::$AWS_ACCOUNT_ID:policy/AWSLoadBalancerControllerIAMPolicy \
             --approve
-            echo "::set-output name=exists::false"
-          fi
+            # echo "::set-output name=exists::false"
+          # fi
           
       - name: Verificar se o AWS Load Balancer Controller já está instalado
         id: aws_loadbalancercontroller_check
