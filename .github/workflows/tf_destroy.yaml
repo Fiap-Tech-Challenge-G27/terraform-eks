@@ -24,5 +24,5 @@ jobs:
       - name: Terraform Destroy
         run: |
             terraform init
-            terraform plan -target=aws_eks_node_group.appNodeGroupTechChallenge -target=aws_eks_cluster.clusterTechChallenge -destroy
-            terraform destroy -target=aws_eks_node_group.appNodeGroupTechChallenge -target=aws_eks_cluster.clusterTechChallenge -auto-approve
+            terraform plan -target=aws_eks_node_group.appNodeGroupTechChallenge -target=aws_eks_cluster.clusterTechChallenge -target=tls_certificate.thumbprint_eks -target=aws_iam_openid_connect_provider.oidc_eks -destroy
+            terraform destroy -target=aws_eks_node_group.appNodeGroupTechChallenge -target=aws_eks_cluster.clusterTechChallenge -target=tls_certificate.thumbprint_eks -target=aws_iam_openid_connect_provider.oidc_eks -auto-approve
