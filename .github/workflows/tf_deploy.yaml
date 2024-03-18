@@ -76,7 +76,7 @@ jobs:
       - name: Instalar o Secrets Store CSI Driver se não estiver instalado
         if: steps.csi_driver_check.outputs.exists == 'false'
         run: |
-          helm install -n kube-system csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver
+          helm install -n kube-system --set syncSecret.enabled=true csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver
 
       - name: Adicionar Helm repo para o AWS Secrets Manager
         run: |
