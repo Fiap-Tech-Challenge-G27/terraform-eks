@@ -8,7 +8,8 @@ resource "aws_default_subnet" "subnetTechChallenge" {
   availability_zone = "us-east-1a"
 
   tags = {
-    Name = "Default subnet for us-east-1a to Tech Challenge"
+    Name = "Default subnet for us-east-1a to Tech Challenge",
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -16,7 +17,8 @@ resource "aws_default_subnet" "subnetTechChallenge2" {
   availability_zone = "us-east-1b"
 
   tags = {
-    Name = "Default subnet for us-east-1b to Tech Challenge"
+    Name = "Default subnet for us-east-1b to Tech Challenge",
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -114,7 +116,7 @@ resource "aws_iam_role_policy_attachment" "cniPolicyRoleNodeEKS" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
 
-resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
+resource "aws_iam_role_policy_attachment" "ecrPolicyRoleNodeEKS" {
   role       = aws_iam_role.roleNodeEKS.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
@@ -127,6 +129,11 @@ resource "aws_iam_role_policy_attachment" "elbPolicyRoleNodeEKS" {
 resource "aws_iam_role_policy_attachment" "nginx_policy_attachment" {
   role       = aws_iam_role.roleNodeSecrets.name
   policy_arn = data.terraform_remote_state.rds.outputs.secrets_policy
+}
+
+resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
+  role       = aws_iam_role.roleNodeEKS.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
 
 resource "aws_eks_cluster" "clusterTechChallenge" {
