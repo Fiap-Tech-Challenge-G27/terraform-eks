@@ -125,9 +125,9 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   }
 
   scaling_config {
-    desired_size = 8
-    max_size     = 10
-    min_size     = 2
+    desired_size = 12
+    max_size     = 15
+    min_size     = 4
   }
 
   depends_on = [
