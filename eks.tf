@@ -1,3 +1,12 @@
+data "terraform_remote_state" "rds" {
+  backend = "s3"
+  config = {
+    bucket = "techchallengestate-g27"
+    key    = "terraform-rds/terraform.tfstate"
+    region = var.aws-region
+  }
+}
+
 resource "aws_default_vpc" "vpcTechChallenge" {
   tags = {
     Name = "Default VPC to Tech Challenge"
