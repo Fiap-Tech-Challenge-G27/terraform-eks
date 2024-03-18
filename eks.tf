@@ -97,7 +97,7 @@ resource "aws_iam_role" "roleNodeSecrets" {
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
           StringEquals = {
-            "${aws_eks_cluster.clusterTechChallenge.identity.0.oidc.0.issuer}:sub" = "system:serviceaccount:default:irsaSecrets"
+            "${aws_eks_cluster.clusterTechChallenge.identity.0.oidc.0.issuer}:sub" = "system:serviceaccount:default:irsasecrets"
           }
         }
       },
