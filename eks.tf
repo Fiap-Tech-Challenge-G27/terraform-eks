@@ -92,7 +92,7 @@ resource "aws_iam_role_policy_attachment" "cniPolicyRoleNodeEKS" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
 
-resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
+resource "aws_iam_role_policy_attachment" "ecrPolicyRoleNodeEKS" {
   role       = aws_iam_role.roleNodeEKS.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
@@ -100,6 +100,11 @@ resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
 resource "aws_iam_role_policy_attachment" "elbPolicyRoleNodeEKS" {
   role       = aws_iam_role.roleNodeEKS.name
   policy_arn = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
+  role       = aws_iam_role.roleNodeEKS.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
 
 
