@@ -74,6 +74,28 @@ resource "aws_iam_role" "roleNodeEKS" {
   assume_role_policy = data.aws_iam_policy_document.policyDocNodeEKS.json
 }
 
+resource "aws_iam_role" "roleNodeSecrets" {
+  name = "roleNodeSecrets"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Federated = aws_iam_openid_connect_provider.oidc_eks.arn
+        }
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            "${aws_eks_cluster.clusterTechChallenge.identity.0.oidc.0.issuer}:sub" = "system:serviceaccount:default:irsaSecrets"
+          }
+        }
+      },
+    ]
+  })
+}
+
 resource "aws_iam_role_policy_attachment" "policyEKSAmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.roleEKS.name
@@ -104,11 +126,15 @@ resource "aws_iam_role_policy_attachment" "elbPolicyRoleNodeEKS" {
   policy_arn = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
 }
 
+resource "aws_iam_role_policy_attachment" "nginx_policy_attachment" {
+  role       = aws_iam_role.roleNodeSecrets.name
+  policy_arn = data.terraform_remote_state.rds.outputs.secrets_policy
+}
+
 resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
   role       = aws_iam_role.roleNodeEKS.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
-
 
 resource "aws_eks_cluster" "clusterTechChallenge" {
   name     = "techchallenge"
