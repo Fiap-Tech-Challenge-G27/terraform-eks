@@ -143,6 +143,6 @@ data "tls_certificate" "thumbprint_eks" {
 
 resource "aws_iam_openid_connect_provider" "oidc_eks" {
   client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.example.certificates.0.sha1_fingerprint]
+  thumbprint_list = [data.tls_certificate.thumbprint_eks.certificates.0.sha1_fingerprint]
   url             = aws_eks_cluster.clusterTechChallenge.identity.0.oidc.0.issuer
 }
