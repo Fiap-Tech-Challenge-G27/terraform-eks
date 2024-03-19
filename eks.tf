@@ -70,7 +70,6 @@ resource "aws_iam_role" "roleEKS" {
         Effect   = "Allow",
         Action   = [
           "ec2:DescribeInstances",
-          # Adicione outras ações necessárias para o serviço EC2
         ],
         Resource = "*",
       }],
@@ -165,9 +164,8 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   node_role_arn   = aws_iam_role.roleNodeEKS.arn
   subnet_ids      = [aws_default_subnet.subnetTechChallenge.id, aws_default_subnet.subnetTechChallenge2.id]
 
-  instance_types = ["t3.medium"]  # Especifica o tipo de instância
-  # ami_type       = "AL2_x86_64"   # Especifica o tipo de AMI
-  disk_size      = 20              # Tamanho do disco em GB
+  instance_types = ["t3.medium"] 
+  disk_size      = 20   
   tags = {
     "Name" = "eks-node-app"
   }
