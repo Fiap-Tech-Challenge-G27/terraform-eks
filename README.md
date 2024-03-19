@@ -1,3 +1,3 @@
 # terraform-eks
 
-Deploy automatizado via Github Actions
+Deploy automatizado via GitHub Actions
