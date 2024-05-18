@@ -7,6 +7,15 @@ data "terraform_remote_state" "rds" {
   }
 }
 
+data "terraform_remote_state" "documentdb" {
+  backend = "s3"
+  config = {
+    bucket = "techchallengestate-g27"
+    key    = "terraform-documentdb/terraform.tfstate"
+    region = var.aws-region
+  }
+}
+
 resource "aws_default_vpc" "vpcTechChallenge" {
   tags = {
     Name = "Default VPC to Tech Challenge"
@@ -135,9 +144,14 @@ resource "aws_iam_role_policy_attachment" "elbPolicyRoleNodeEKS" {
   policy_arn = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
 }
 
-resource "aws_iam_role_policy_attachment" "nginx_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "secrets_rds_policy_attachment" {
   role       = aws_iam_role.roleNodeSecrets.name
   policy_arn = data.terraform_remote_state.rds.outputs.secrets_policy
+}
+
+resource "aws_iam_role_policy_attachment" "secrets_documentdb_policy_attachment" {
+  role       = aws_iam_role.roleNodeSecrets.name
+  policy_arn = data.terraform_remote_state.documentdb.outputs.secrets_policy
 }
 
 resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
