@@ -187,9 +187,9 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   capacity_type = "SPOT"
 
   scaling_config {
-    desired_size = 3
-    max_size     = 5
-    min_size     = 1
+    desired_size = 5
+    max_size     = 7
+    min_size     = 2
   }
 
   depends_on = [
