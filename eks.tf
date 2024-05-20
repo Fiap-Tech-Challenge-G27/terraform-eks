@@ -178,7 +178,7 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   node_role_arn   = aws_iam_role.roleNodeEKS.arn
   subnet_ids      = [aws_default_subnet.subnetTechChallenge.id, aws_default_subnet.subnetTechChallenge2.id]
 
-  instance_types = ["t3.medium"] 
+  instance_types = ["t3.large"] 
   disk_size      = 20   
   tags = {
     "Name" = "eks-node-app"
@@ -187,9 +187,9 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   capacity_type = "SPOT"
 
   scaling_config {
-    desired_size = 5
+    desired_size = 3
     max_size     = 7
-    min_size     = 2
+    min_size     = 1
   }
 
   depends_on = [
