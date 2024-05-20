@@ -97,7 +97,7 @@ jobs:
           fi
 
       - name: Instalar o AWS Secrets Manager provider se não estiver instalado
-        # if: steps.aws_provider_check.outputs.exists == 'false'
+        if: steps.aws_provider_check.outputs.exists == 'false'
         run: |
           helm install csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver --set syncSecret.enabled=true --namespace kube-system
 
