@@ -95,7 +95,7 @@ jobs:
       - name: Instalar o AWS Secrets Manager provider se não estiver instalado
         # if: steps.aws_provider_check.outputs.exists == 'false'
         run: |
-          helm install -n kube-system secrets-provider-aws aws-secrets-manager/secrets-store-csi-driver-provider-aws
+          helm install csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver --set syncSecret.enabled=true --namespace kube-system
 
       - name: Verificar se a AWS Load Balancer Controller IAM Policy já foi criada
         id: aws_loadbalancercontroller_policy_check
