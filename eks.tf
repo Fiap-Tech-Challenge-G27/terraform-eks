@@ -178,7 +178,7 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   node_role_arn   = aws_iam_role.roleNodeEKS.arn
   subnet_ids      = [aws_default_subnet.subnetTechChallenge.id, aws_default_subnet.subnetTechChallenge2.id]
 
-  instance_types = ["t3.large"] 
+  instance_types = ["t3.2xlarge"] 
   disk_size      = 20   
   tags = {
     "Name" = "eks-node-app"
