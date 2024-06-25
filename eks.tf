@@ -1,45 +1,3 @@
-data "terraform_remote_state" "rds" {
-  backend = "s3"
-  config = {
-    bucket = "techchallengestate-g27"
-    key    = "terraform-rds/terraform.tfstate"
-    region = var.aws-region
-  }
-}
-
-data "terraform_remote_state" "documentdb" {
-  backend = "s3"
-  config = {
-    bucket = "techchallengestate-g27"
-    key    = "terraform-documentdb/terraform.tfstate"
-    region = var.aws-region
-  }
-}
-
-resource "aws_default_vpc" "vpcTechChallenge" {
-  tags = {
-    Name = "Default VPC to Tech Challenge"
-  }
-}
-
-resource "aws_default_subnet" "subnetTechChallenge" {
-  availability_zone = "us-east-1a"
-
-  tags = {
-    Name = "Default subnet for us-east-1a to Tech Challenge",
-    "kubernetes.io/role/elb" = "1"
-  }
-}
-
-resource "aws_default_subnet" "subnetTechChallenge2" {
-  availability_zone = "us-east-1b"
-
-  tags = {
-    Name = "Default subnet for us-east-1b to Tech Challenge",
-    "kubernetes.io/role/elb" = "1"
-  }
-}
-
 data "aws_iam_policy_document" "policyDocEKS" {
   statement {
     effect = "Allow"
@@ -164,7 +122,7 @@ resource "aws_eks_cluster" "clusterTechChallenge" {
   role_arn = aws_iam_role.roleEKS.arn
 
   vpc_config {
-    subnet_ids = [aws_default_subnet.subnetTechChallenge.id, aws_default_subnet.subnetTechChallenge2.id]
+    subnet_ids = [data.aws_subnet.subnet1.id, data.aws_subnet.subnet2.id]
   }
 
   depends_on = [
@@ -177,7 +135,7 @@ resource "aws_eks_node_group" "appNodeGroupTechChallenge" {
   cluster_name    = aws_eks_cluster.clusterTechChallenge.name
   node_group_name = "appNodeTechChallenge"
   node_role_arn   = aws_iam_role.roleNodeEKS.arn
-  subnet_ids      = [aws_default_subnet.subnetTechChallenge.id, aws_default_subnet.subnetTechChallenge2.id]
+  subnet_ids      = [data.aws_subnet.subnet1.id, data.aws_subnet.subnet2.id]
 
   instance_types = ["t3.medium"]  # Especifica o tipo de instância
   # ami_type       = "AL2_x86_64"   # Especifica o tipo de AMI
