@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "policySnsSub" {
   statement {
     effect = "Allow"
     actions = ["sns:ConfirmSubscription", "sns:Receive"]
-    resource = "arn:aws:sns:us-east-1:851725345801:*"
+    resources = "arn:aws:sns:us-east-1:851725345801:*"
   }
 }
 
