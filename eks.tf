@@ -122,7 +122,7 @@ resource "aws_iam_role_policy_attachment" "secrets_documentdb_policy_attachment"
 
 resource "aws_iam_role_policy_attachment" "sns_sub_policy_attachment" {
   role       = aws_iam_role.roleNodeSecrets.name
-  policy_arn = data.aws_iam_policy_document.policySnsSub.ar
+  policy_arn = data.aws_iam_policy_document.policySnsSub.arn
 }
 
 resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
