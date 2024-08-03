@@ -46,7 +46,7 @@ spec:
             name: ms-producao
             port:
               number: 3000
-      - path: /initiate
+      - path: /payment/initiate
         pathType: Prefix
         backend:
           service:
