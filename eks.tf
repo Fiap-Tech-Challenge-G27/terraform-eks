@@ -24,13 +24,13 @@ data "aws_iam_policy_document" "policyDocNodeEKS" {
   }
 }
 
-data "aws_iam_policy_document" "policySnsSub" {
-  statement {
-    effect = "Allow"
-    actions = ["sns:ConfirmSubscription", "sns:Receive"]
-    resources = ["arn:aws:sns:us-east-1:851725345801:*"]
-  }
-}
+#data "aws_iam_policy_document" "policySnsSub" {
+ # statement {
+  #  effect = "Allow"
+   # actions = ["sns:ConfirmSubscription", "sns:Receive"]
+    #resources = ["arn:aws:sns:us-east-1:851725345801:*"]
+ # }
+#}
 
 
 resource "aws_iam_role" "roleEKS" {
@@ -120,10 +120,10 @@ resource "aws_iam_role_policy_attachment" "secrets_documentdb_policy_attachment"
   policy_arn = data.terraform_remote_state.documentdb.outputs.secrets_policy
 }
 
-resource "aws_iam_role_policy_attachment" "sns_sub_policy_attachment" {
-  role       = aws_iam_role.roleNodeSecrets.name
-  policy_arn = data.aws_iam_policy_document.policySnsSub.arn
-}
+#resource "aws_iam_role_policy_attachment" "sns_sub_policy_attachment" {
+ # role       = aws_iam_role.roleNodeSecrets.name
+  #policy_arn = data.aws_iam_policy_document.policySnsSub.arn
+#}
 
 resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
   role       = aws_iam_role.roleNodeEKS.name
