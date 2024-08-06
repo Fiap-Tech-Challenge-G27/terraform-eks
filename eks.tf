@@ -11,6 +11,8 @@ data "aws_iam_policy_document" "policyDocEKS" {
   }
 }
 
+
+
 data "aws_iam_policy_document" "policyDocNodeEKS" {
   statement {
     effect = "Allow"
@@ -24,12 +26,23 @@ data "aws_iam_policy_document" "policyDocNodeEKS" {
   }
 }
 
-data "aws_iam_policy_document" "policySnsSub" {
-  statement {
-    effect = "Allow"
-    actions = ["sns:ConfirmSubscription", "sns:Receive"]
-    resources = ["arn:aws:sns:us-east-1:851725345801:*"]
-  }
+resource "aws_iam_policy" "policySnsSub" {
+  name        = "policySnsSub"
+  path        = "/"
+  description = "policySnsSub"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "sns:*",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
 }
 
 
@@ -122,7 +135,7 @@ resource "aws_iam_role_policy_attachment" "secrets_documentdb_policy_attachment"
 
 resource "aws_iam_role_policy_attachment" "sns_sub_policy_attachment" {
   role       = aws_iam_role.roleNodeSecrets.name
-  policy_arn = data.aws_iam_policy_document.policySnsSub.arn
+  policy_arn = aws_iam_policy.policySnsSub.arn
 }
 
 resource "aws_iam_role_policy_attachment" "ec2PolicyRoleNodeEKS" {
